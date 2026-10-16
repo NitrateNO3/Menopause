@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import RouteEffects from './components/RouteEffects'
+
 import { LeadProvider } from './components/LeadModal'
 
 export default function App() {

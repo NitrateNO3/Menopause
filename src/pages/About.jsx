@@ -152,56 +152,95 @@ export default function About() {
         </div>
       </section>
 
-      {/* 5. What we do */}
-      <section className="section section--cream">
-        <div className="container">
-          <Reveal className="section__head">
-            <p className="eyebrow">What we do</p>
-            <h2 className="section__title">Learn. Listen. Connect.</h2>
-          </Reveal>
-          <div className="do">
-            <Reveal>
-              <Link to="/learn" className="do__card">
-                <div className="do__visual do__visual--learn" aria-hidden="true">
-                  {shelf.map((a, i) => {
-                    const size = bookSize(i)
-                    return <span key={a.slug} className={`do__book ${bookTone(i)}`} style={{ width: size.w * 0.42, height: size.h * 0.36 }} />
-                  })}
-                </div>
-                <h3>Learn</h3>
-                <p>{articles.length} short, jargon-free reads on what’s happening in your body.</p>
-                <span className="link-arrow">Open the library <ArrowRight width={16} height={16} /></span>
-              </Link>
-            </Reveal>
-            <Reveal delay={80}>
-              <Link to="/podcast" className="do__card">
-                <div className="do__visual do__visual--listen" aria-hidden="true">
-                  <span className="do__play" />
-                  <span className="do__wave">
-                    {Array.from({ length: 14 }, (_, i) => <i key={i} style={{ '--i': i }} />)}
-                  </span>
-                </div>
-                <h3>Listen</h3>
-                <p>Podcast conversations on fitness, health and emotions in midlife.</p>
-                <span className="link-arrow">
-                  {episodes.length > 1 ? 'All episodes' : 'Watch the latest episode'} <ArrowRight width={16} height={16} />
-                </span>
-              </Link>
-            </Reveal>
-            <Reveal delay={160}>
-              <a href={site.social.instagram} target="_blank" rel="noreferrer" className="do__card">
-                <div className="do__visual do__visual--connect" aria-hidden="true">
-                  <span className="do__bubble">Is this normal?</span>
-                  <span className="do__bubble do__bubble--reply">So normal. You’re not alone.</span>
-                </div>
-                <h3>Connect</h3>
-                <p>Reels, memes and real talk with women going through the same thing.</p>
-                <span className="link-arrow">{site.social.instagramHandle} <ArrowRight width={16} height={16} /></span>
-              </a>
-            </Reveal>
+      
+{/* 5. What we do */}
+<section className="section section--cream">
+  <div className="container">
+    <Reveal className="section__head">
+      <p className="eyebrow">What we do</p>
+      <h2 className="section__title">Learn. Listen. Connect.</h2>
+    </Reveal>
+
+    <div className="do">
+      <Reveal>
+        <Link to="/learn" className="do__card">
+          <div className="do__visual do__visual--learn" aria-hidden="true">
+            {shelf.map((a, i) => {
+              const size = bookSize(i)
+              return (
+                <span
+                  key={a.slug}
+                  className={`do__book ${bookTone(i)}`}
+                  style={{
+                    width: size.w * 0.42,
+                    height: size.h * 0.36,
+                  }}
+                />
+              )
+            })}
           </div>
-        </div>
-      </section>
+          <h3>Learn</h3>
+          <p>
+            {articles.length} short, jargon-free reads on what’s happening in your body.
+          </p>
+          <span className="link-arrow">
+            Open the library <ArrowRight width={16} height={16} />
+          </span>
+        </Link>
+      </Reveal>
+
+      <Reveal delay={80}>
+        <a
+          href={`https://www.youtube.com/watch?v=${episodes[0].youtubeId}`}
+          target="_blank"
+          rel="noreferrer"
+          className="do__card"
+        >
+          <div className="do__visual do__visual--listen" aria-hidden="true">
+            <span className="do__play" />
+            <span className="do__wave">
+              {Array.from({ length: 14 }, (_, i) => (
+                <i key={i} style={{ '--i': i }} />
+              ))}
+            </span>
+          </div>
+          <h3>Listen</h3>
+          <p>
+            Podcast conversations on fitness, health and emotions in midlife.
+          </p>
+          <span className="link-arrow">
+            Watch the latest episode <ArrowRight width={16} height={16} />
+          </span>
+        </a>
+      </Reveal>
+
+      <Reveal delay={160}>
+        <a
+          href={site.social.instagram}
+          target="_blank"
+          rel="noreferrer"
+          className="do__card"
+        >
+          <div className="do__visual do__visual--connect" aria-hidden="true">
+            <span className="do__bubble">Is this normal?</span>
+            <span className="do__bubble do__bubble--reply">
+              So normal. You’re not alone.
+            </span>
+          </div>
+          <h3>Connect</h3>
+          <p>
+            Reels, memes and real talk with women going through the same thing.
+          </p>
+          <span className="link-arrow">
+            {site.social.instagramHandle}{' '}
+            <ArrowRight width={16} height={16} />
+          </span>
+        </a>
+      </Reveal>
+    </div>
+  </div>
+</section>
+
 
       {/* 6. A note from us */}
       <section className="section">

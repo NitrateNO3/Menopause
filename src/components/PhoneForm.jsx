@@ -8,6 +8,7 @@ export const LEAD_KEY = 'mi_phone_lead'
 // `inline` drops the optional name and puts the number and button on one row.
 export default function PhoneForm({ source = 'inline', onDone, compact = false, inline = false }) {
   const id = useId()
+  const [email, setEmail] = useState("");
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [consent, setConsent] = useState(false)
@@ -53,7 +54,7 @@ export default function PhoneForm({ source = 'inline', onDone, compact = false, 
     <form className={`form ${compact || inline ? 'form--compact' : ''}`} onSubmit={handleSubmit} noValidate>
       {!inline && (
       <div className="field">
-        <label htmlFor={`${id}-name`}>Your first name <span className="field__optional">(optional)</span></label>
+        <label htmlFor={`${id}-name`}>Your first name </label>
         <input id={`${id}-name`} type="text" autoComplete="given-name" value={name} onChange={(e) => setName(e.target.value)} />
       </div>
       )}
@@ -77,6 +78,21 @@ export default function PhoneForm({ source = 'inline', onDone, compact = false, 
         </div>
         {inline && <SubmitButton status={status} />}
         </div>
+        
+<div className="field">
+  <label htmlFor={`${id}-email`}>
+    Email address
+  </label>
+  <input
+    id={`${id}-email`}
+    type="email"
+    autoComplete="email"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    required
+  />
+</div>
+
       </div>
       <label className="checkbox">
         <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />

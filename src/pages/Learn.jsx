@@ -1,462 +1,253 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
-import { articles, categories, getArticle, readingTime } from '../content/articles'
-import { feelings, stages, throughout } from '../content/learnPaths'
+import { Link } from 'react-router-dom'
 import { site } from '../site.config'
-import { track } from '../lib/analytics'
-import { bookSize, bookTone } from '../lib/books'
 import Seo from '../components/Seo'
 import Reveal from '../components/Reveal'
-import Brandmark from '../components/Brandmark'
-import ArticleCover from '../components/ArticleCover'
 import Disclaimer from '../components/Disclaimer'
-import { ArrowRight, Instagram, Search } from '../components/Icons'
 
-const ALL = 'All'
-const usedCategories = categories.filter((c) => articles.some((a) => a.category === c))
-const numberOf = (slug) => String(articles.findIndex((a) => a.slug === slug) + 1).padStart(2, '0')
+const stages = [
+  {
+    number: '01',
+    phase: 'The Transition',
+    title: 'Perimenopause',
+    description:
+      'Understand the changes that may begin before your periods stop.',
+    details:
+      'Hormone levels fluctuate unevenly, bringing changes in sleep, mood, and period patterns.',
+  },
+  {
+    number: '02',
+    phase: 'The Milestone',
+    title: 'Menopause',
+    isMilestone: true,
+    description:
+      'Learn about this transition and find practical information for everyday wellbeing.',
+    details:
+      'Reached when you have gone 12 months in a row without a period. A single moment looking back.',
+  },
+  {
+    number: '03',
+    phase: 'The Years After',
+    title: 'Postmenopause',
+    description:
+      'Explore health and wellbeing in the years after menopause.',
+    details:
+      'Focusing on long-term strength, bone density, heart health, and vibrant everyday comfort.',
+  },
+]
 
-/* ---------- 1. "Lately, I've been…" ---------- */
+const resources = [
+  {
+    title: 'Understanding Menopause',
+    description: 'A simple guide to the stages and common changes.',
+  },
+  {
+    title: 'Managing Symptoms',
+    description: 'Helpful information about common symptoms and everyday comfort.',
+  },
+  {
+    title: 'Sleep & Wellbeing',
+    description: 'Learn about sleep, mood and looking after yourself.',
+  },
+  {
+    title: 'Your Doctor Visit',
+    description: 'Questions and notes to help you prepare for an appointment.',
+  },
+]
 
-function FeelingPicker() {
-  const [picked, setPicked] = useState(null)
-  const answerRef = useRef(null)
-  const feeling = feelings.find((f) => f.id === picked)
-
-  function pick(f) {
-    setPicked(f.id)
-    track('learn_feeling', { feeling: f.id })
-    // On phones the answer sits below the options, so bring it into view.
-    if (window.matchMedia('(max-width: 900px)').matches) {
-      setTimeout(() => answerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50)
-    }
+function StageVisual({ type }) {
+  if (type === 0) {
+    return (
+      <svg viewBox="0 0 200 48" fill="none" className="stage-svg" aria-hidden="true">
+        <path d="M10 24 Q 55 8, 100 24 T 190 24" stroke="var(--rose)" strokeWidth="2.8" strokeLinecap="round" opacity="0.65" />
+        <path d="M10 32 Q 55 16, 100 32 T 190 32" stroke="var(--blush)" strokeWidth="2" strokeLinecap="round" opacity="0.55" strokeDasharray="4 4" />
+        <circle cx="55" cy="15" r="4.5" fill="var(--rose)" opacity="0.8" />
+        <circle cx="145" cy="33" r="4" fill="var(--blush)" />
+      </svg>
+    )
   }
-
-  return (
-    <section className="feel">
-      <div className="feel__bg" aria-hidden="true" />
-      <div className="container feel__grid">
-        <div className="feel__ask">
-          <p className="eyebrow">Learn</p>
-          <h1 className="feel__lead">
-            Lately, <br className="feel__br" />
-            I’ve been<span className="feel__dots">…</span>
-          </h1>
-          <div className="feel__options" role="group" aria-label="Choose what sounds like you">
-            {feelings.map((f, i) => (
-              <button
-                key={f.id}
-                className={`feel__option ${picked === f.id ? 'is-picked' : ''}`}
-                aria-pressed={picked === f.id}
-                onClick={() => pick(f)}
-                style={{ animationDelay: `${150 + i * 60}ms` }}
-              >
-                {f.phrase}
-              </button>
-            ))}
-          </div>
-          <p className="feel__or">
-            Or <a href="#journey">find yourself on the map</a>, or <a href="#library">browse all {articles.length} articles</a>.
-          </p>
-        </div>
-
-        <div className="feel__answer" ref={answerRef} aria-live="polite">
-          {feeling ? (
-            <div className="answer" key={feeling.id}>
-              <p className="answer__echo">“Lately, I’ve been {feeling.phrase}.”</p>
-              <p className="answer__reply">{feeling.reply}</p>
-              <p className="answer__label">Read next</p>
-              <ul className="answer__reads">
-                {feeling.slugs.map(getArticle).map((a) => (
-                  <li key={a.slug}>
-                    <Link to={`/learn/${a.slug}`} className="mini">
-                      <span className="mini__thumb"><ArticleCover article={a} /></span>
-                      <span className="mini__text">
-                        <strong>{a.title}</strong>
-                        <span>{a.category} · {readingTime(a)} min read</span>
-                      </span>
-                      <ArrowRight className="mini__arrow" width={18} height={18} />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : (
-            <div className="answer answer--empty">
-              <Brandmark animated className="answer__mark" />
-              <p>
-                Tap whatever sounds like you. <br />
-                We’ll point you to the right read.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-/* ---------- 2. The journey map ---------- */
-
-function StageLinks({ slugs }) {
-  return (
-    <ul className="journey__reads">
-      {slugs.map(getArticle).map((a) => (
-        <li key={a.slug}>
-          <Link to={`/learn/${a.slug}`} title={a.title}>
-            <span className="journey__num">{numberOf(a.slug)}</span>
-            <span className="journey__label">{a.short || a.title}</span>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  )
-}
-
-const totalSize = stages.reduce((sum, s) => sum + s.size, 0)
-
-// How far the lit-up track reaches for the chosen stage, as CSS variables
-// (fraction of the free width before the stage's marker, plus gaps crossed).
-function fillFor(index) {
-  if (index < 0) return { '--f': 0, '--i': 0, '--extra': '0px' }
-  const stage = stages[index]
-  const before = stages.slice(0, index).reduce((sum, s) => sum + s.size, 0)
-  return {
-    '--f': (before + (stage.point ? stage.size / 2 : 0)) / totalSize,
-    '--i': index,
-    '--extra': stage.point ? '0px' : '30px',
+  if (type === 1) {
+    return (
+      <svg viewBox="0 0 200 48" fill="none" className="stage-svg" aria-hidden="true">
+        <circle cx="100" cy="24" r="20" fill="var(--petal)" stroke="var(--rose)" strokeWidth="2" opacity="0.85" />
+        <circle cx="100" cy="24" r="12" fill="var(--rose)" opacity="0.25" />
+        <circle cx="100" cy="24" r="5" fill="var(--rose)" />
+        <line x1="24" y1="24" x2="72" y2="24" stroke="var(--blush)" strokeWidth="2" strokeDasharray="4 4" opacity="0.6" />
+        <line x1="128" y1="24" x2="176" y2="24" stroke="var(--blush)" strokeWidth="2" strokeDasharray="4 4" opacity="0.6" />
+      </svg>
+    )
   }
-}
-
-function HereButton({ active, onClick }) {
   return (
-    <button className={`stage__here ${active ? 'is-active' : ''}`} aria-pressed={active} onClick={onClick}>
-      <span className="stage__radio" aria-hidden="true" />
-      {active ? 'You’re here' : 'I’m here'}
-    </button>
-  )
-}
-
-function Journey() {
-  const [here, setHere] = useState(null)
-  const [view, setView] = useState(0) // which card is in view on phones
-  const rowRef = useRef(null)
-  const hereIndex = stages.findIndex((s) => s.id === here)
-
-  function toggle(id) {
-    const next = here === id ? null : id
-    setHere(next)
-    if (next) track('learn_stage', { stage: next })
-  }
-
-  // Phones: the stages sit in a swipeable row; keep the step dots in sync with it.
-  function onRowScroll() {
-    const row = rowRef.current
-    const card = row?.firstElementChild
-    if (!card) return
-    setView(Math.round(row.scrollLeft / (card.offsetWidth + 12)))
-  }
-
-  function goTo(i) {
-    const row = rowRef.current
-    const card = row?.children[i]
-    if (card) row.scrollTo({ left: card.offsetLeft - row.offsetLeft, behavior: 'smooth' })
-  }
-
-  return (
-    <section className="journey" id="journey">
-      <Brandmark className="journey__watermark" />
-      <div className="container journey__inner">
-        <div className="journey__head">
-          <div>
-            <p className="eyebrow eyebrow--light">The journey</p>
-            <h2 className="journey__title">Find yourself on the map.</h2>
-          </div>
-          <p className="journey__lead">
-            <span className="journey__lead-text">
-              Menopause itself is a single day. What most women feel happens in the years around it.{' '}
-            </span>
-            <span className="journey__hint">
-              <span className="journey__hint-dot" aria-hidden="true" />
-              Tap <strong>I’m here</strong> on the stage that sounds like you.
-            </span>
-          </p>
-        </div>
-
-        <div className="journey__steps" role="tablist" aria-label="Stages">
-          {stages.map((s, i) => (
-            <button
-              key={s.id}
-              role="tab"
-              aria-selected={view === i}
-              className={`journey__step ${view === i ? 'is-view' : ''} ${here === s.id ? 'is-here' : ''} ${s.point ? 'is-point' : ''}`}
-              onClick={() => goTo(i)}
-            >
-              <span className="journey__step-dot" aria-hidden="true" />
-              {s.name}
-            </button>
-          ))}
-        </div>
-
-        <Reveal
-          className={`journey__map ${here ? 'has-here' : ''}`}
-          style={{ '--cols': stages.map((s) => `${s.size}fr`).join(' '), '--n': stages.length }}
-        >
-          <div className="journey__track" aria-hidden="true">
-            <span className="journey__fill" style={fillFor(hereIndex)} />
-            <span className="journey__spark" />
-          </div>
-
-          <div className="journey__row" ref={rowRef} onScroll={onRowScroll}>
-            {stages.map((s, i) => {
-              const active = here === s.id
-              const state = active ? 'is-here' : here ? 'is-dim' : ''
-              const bubble = active && <span className="stage__bubble">You are here</span>
-
-              if (s.point) {
-                return (
-                  <div key={s.id} className={`stage-point ${state}`} style={{ '--i': i }}>
-                    <span className="stage__marker stage__marker--point" aria-hidden="true">{bubble}</span>
-                    <span className="stage-point__beam" aria-hidden="true" />
-                    <p className="journey__when">{s.when}</p>
-                    <h3 className="stage-point__name">{s.name}</h3>
-                    <p className="journey__text">{s.text}</p>
-                    <HereButton active={active} onClick={() => toggle(s.id)} />
-                  </div>
-                )
-              }
-
-              return (
-                <article key={s.id} className={`stage ${state}`} style={{ '--i': i }}>
-                  <span className="stage__marker" aria-hidden="true">{bubble}</span>
-                  <span className="stage__ghost" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                  <p className="journey__when">{s.when}</p>
-                  <h3 className="journey__name">{s.name}</h3>
-                  <p className="journey__text">{s.text}</p>
-                  <StageLinks slugs={s.slugs} />
-                  <HereButton active={active} onClick={() => toggle(s.id)} />
-                </article>
-              )
-            })}
-          </div>
-
-          <div className="journey__throughout">
-            <Brandmark className="journey__throughout-mark" />
-            <div className="journey__throughout-text">
-              <h3>{throughout.name}</h3>
-              <p>For the people around you, and your doctor.</p>
-            </div>
-            <StageLinks slugs={throughout.slugs} />
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  )
-}
-
-/* ---------- 3. The library ---------- */
-
-function Mug() {
-  return (
-    <svg className="mug" viewBox="0 0 64 76" aria-hidden="true">
-      <path className="mug__steam" d="M22 22c-4-5 4-8 0-14" />
-      <path className="mug__steam mug__steam--2" d="M32 22c-4-5 4-8 0-14" />
-      <path className="mug__steam mug__steam--3" d="M42 22c-4-5 4-8 0-14" />
-      <path d="M50 40h4a9 9 0 0 1 0 18h-5" fill="none" stroke="var(--rose-deep)" strokeWidth="5" />
-      <rect x="12" y="30" width="40" height="44" rx="9" fill="var(--rose-deep)" />
-      <rect x="12" y="30" width="40" height="8" rx="4" fill="var(--rose)" />
+    <svg viewBox="0 0 200 48" fill="none" className="stage-svg" aria-hidden="true">
+      <path d="M44 38 A 56 56 0 0 1 156 38" stroke="var(--rose)" strokeWidth="2.8" strokeLinecap="round" opacity="0.65" />
+      <path d="M62 38 A 38 38 0 0 1 138 38" stroke="var(--blush)" strokeWidth="2.2" strokeLinecap="round" opacity="0.75" />
+      <path d="M80 38 A 20 20 0 0 1 120 38" stroke="var(--rose-deep)" strokeWidth="2" strokeLinecap="round" opacity="0.8" />
+      <circle cx="100" cy="14" r="3.5" fill="var(--rose)" />
     </svg>
   )
 }
 
-function Library() {
-  const [params, setParams] = useSearchParams()
-  const [query, setQuery] = useState('')
-  const [selected, setSelected] = useState(articles[0].slug)
-  const ref = useRef(null)
-  const deskRef = useRef(null)
-  const selectedBeforeTap = useRef(null)
-
-  const topic = usedCategories.includes(params.get('topic')) ? params.get('topic') : ALL
-  const q = query.trim().toLowerCase()
-
-  // Deep links like /learn?topic=Symptoms land straight on the filtered library.
-  useEffect(() => {
-    if (params.get('topic')) setTimeout(() => ref.current?.scrollIntoView({ block: 'start' }), 100)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const matches = useMemo(
-    () =>
-      new Set(
-        articles
-          .filter(
-            (a) =>
-              (topic === ALL || a.category === topic) &&
-              (!q || `${a.title} ${a.excerpt} ${a.category}`.toLowerCase().includes(q)),
-          )
-          .map((a) => a.slug),
-      ),
-    [topic, q],
-  )
-
-  // Keep the preview on a book that matches the current filter.
-  useEffect(() => {
-    if (matches.size && !matches.has(selected)) setSelected([...matches][0])
-  }, [matches, selected])
-
-  const book = getArticle(selected)
-  const bookIndex = articles.findIndex((a) => a.slug === selected)
-
-  function onBookClick(e, slug) {
-    // Touch screens can't hover: the first tap previews, the second opens.
-    // (Focus fires before click, so compare with what was selected when the tap began.)
-    if (window.matchMedia('(hover: none)').matches && selectedBeforeTap.current !== slug) {
-      e.preventDefault()
-      setSelected(slug)
-      setTimeout(() => deskRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50)
+export default function Learn() {
+  const scrollToResources = () => {
+    const el = document.getElementById('resources')
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
 
-  return (
-    <section className="section library" id="library" ref={ref}>
-      <div className="container">
-        <div className="library__head">
-          <div>
-            <p className="eyebrow">The library</p>
-            <h2 className="section__title">Take one off the shelf.</h2>
-            <p className="library__lead">Short reads you can finish over a cup of chai.</p>
-          </div>
-          <div className="search library__search">
-            <Search />
-            <label htmlFor="article-search" className="sr-only">Search the library</label>
-            <input
-              id="article-search"
-              type="search"
-              placeholder="Search the library"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="library__topics" role="group" aria-label="Filter by topic">
-          {[ALL, ...usedCategories].map((c) => (
-            <button
-              key={c}
-              className={`library__topic ${topic === c ? 'is-active' : ''}`}
-              aria-pressed={topic === c}
-              onClick={() => setParams(c === ALL ? {} : { topic: c }, { replace: true, preventScrollReset: true })}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-
-        <div className="library__room">
-          <div className="shelf">
-            <div className="shelf__books">
-              {articles.map((a, i) => {
-                const size = bookSize(i)
-                const isMatch = matches.has(a.slug)
-                return (
-                  <Link
-                    key={a.slug}
-                    to={`/learn/${a.slug}`}
-                    className={`book ${bookTone(i)} ${isMatch ? '' : 'is-out'} ${selected === a.slug ? 'is-selected' : ''}`}
-                    style={{ '--w': `${size.w}px`, '--g': size.w, '--h': `${size.h}px` }}
-                    aria-label={a.title}
-                    tabIndex={isMatch ? 0 : -1}
-                    onMouseEnter={() => isMatch && setSelected(a.slug)}
-                    onFocus={() => setSelected(a.slug)}
-                    onPointerDown={() => (selectedBeforeTap.current = selected)}
-                    onClick={(e) => onBookClick(e, a.slug)}
-                  >
-                    <span className="book__num">{numberOf(a.slug)}</span>
-                    <span className="book__title">{a.short || a.title}</span>
-                    <Brandmark className="book__mark" />
-                  </Link>
-                )
-              })}
-              <div className="shelf__decor" aria-hidden="true">
-                <div className="shelf__stack">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-                <Mug />
-              </div>
-            </div>
-            <div className="shelf__plank" aria-hidden="true" />
-            <p className="shelf__hint">
-              <span className="shelf__hint--hover">Hover over a book to peek inside, click to read.</span>
-              <span className="shelf__hint--touch">Tap a book to peek inside, tap again to read.</span>
-            </p>
-          </div>
-
-          <div className="desk" ref={deskRef} aria-live="polite">
-            {matches.size ? (
-              <div className="desk__card" key={book.slug}>
-                <ArticleCover article={book} />
-                <div className="desk__body">
-                  <p className="card__meta">
-                    <span className="tag">{book.category}</span>
-                    <span>{readingTime(book)} min read</span>
-                  </p>
-                  <h3 className="desk__title">{book.title}</h3>
-                  <p className="desk__excerpt">{book.excerpt}</p>
-                  <div className="desk__actions">
-                    <Link to={`/learn/${book.slug}`} className="btn btn--primary">
-                      Read article <ArrowRight />
-                    </Link>
-                    <span className="desk__count">
-                      Book {String(bookIndex + 1).padStart(2, '0')} of {String(articles.length).padStart(2, '0')}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="desk__card desk__card--empty">
-                <Brandmark className="desk__empty-mark" />
-                <p>No books match that yet. Tell us on Instagram what you’d like us to write about.</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-export default function Learn() {
   return (
     <>
       <Seo
         title="Learn about menopause"
         path="/learn"
-        description="Simple, practical articles on perimenopause, menopause, hot flushes, sleep, mood, strength training and talking to your doctor."
+        description="Explore the menopause journey and find helpful PDF resources."
       />
 
-      <FeelingPicker />
-      <Journey />
-      <Library />
+      <section className="section learn-journey">
+        <div className="learn-journey__bg" aria-hidden="true">
+          <span className="blob learn-journey__blob learn-journey__blob--1" />
+          <span className="blob learn-journey__blob learn-journey__blob--2" />
+          <span className="blob learn-journey__blob learn-journey__blob--3" />
+          <div className="learn-journey__mesh" />
+          <div className="learn-journey__ring" />
+        </div>
 
-      <section className="section section--tight section--top-tight">
+        <div className="container">
+          <div className="learn-journey__header">
+            <div className="learn-journey__copy">
+              <p className="eyebrow">YOUR JOURNEY, YOUR PACE</p>
+              <h1 className="section__title">
+                Every journey is <em>different.</em>
+              </h1>
+              <p className="learn-intro">
+                Understand the stages of menopause and explore simple resources
+                to help you feel more informed at every milestone.
+              </p>
+            </div>
+
+            <div className="scroll-explore-wrap">
+              <button
+                type="button"
+                className="scroll-explore"
+                onClick={scrollToResources}
+                aria-label="Scroll to Resource Library"
+              >
+                <span className="scroll-explore__track">
+                  <span className="scroll-explore__dot" />
+                </span>
+                <span className="scroll-explore__label">
+                  <span className="scroll-explore__eyebrow">RESOURCE LIBRARY</span>
+                  <span className="scroll-explore__title">Scroll to explore</span>
+                </span>
+                <span className="scroll-explore__arrow" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 5v14M19 12l-7 7-7-7" />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div className="journey-grid" id="journey-stages">
+            <div className="journey-track-rail" aria-hidden="true">
+              <div className="journey-track-line" />
+              <div className="journey-track-spark" />
+            </div>
+
+            {stages.map((stage, idx) => (
+              <div
+                key={stage.number}
+                className={`journey-card-col ${stage.isMilestone ? 'is-milestone' : ''}`}
+                style={{ '--i': idx }}
+              >
+                <div className="journey-card">
+                  <div className="journey-card__header">
+                    <div className="journey-card__marker">
+                      <span className="journey-number">{stage.number}</span>
+                      <span className="journey-marker-ring" />
+                      {stage.isMilestone && <span className="journey-milestone-pulse" />}
+                    </div>
+                    <span className="journey-phase-tag">{stage.phase}</span>
+                  </div>
+
+                  <div className="journey-card__art" aria-hidden="true">
+                    <StageVisual type={idx} />
+                  </div>
+
+                  <div className="journey-card__body">
+                    <h2>{stage.title}</h2>
+                    <p className="journey-card__desc">{stage.description}</p>
+                    <p className="journey-card__details">{stage.details}</p>
+                  </div>
+
+                  <div className="journey-card__footer">
+                    <span className="journey-card__step-info">
+                      <span className="journey-card__step-dot" />
+                      <span>Phase {stage.number} of 03</span>
+                    </span>
+                    {stage.isMilestone && (
+                      <span className="journey-card__badge">12 months milestone</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section learn-resources" id="resources">
+        <div className="container">
+          <Reveal>
+            <p className="eyebrow">THE RESOURCE LIBRARY</p>
+            <h2 className="section__title">Helpful guides, in one place.</h2>
+            <p className="learn-intro">
+              Explore our upcoming downloadable guides, designed to make
+              menopause information easier to understand.
+            </p>
+          </Reveal>
+
+          <div className="resource-grid">
+            {resources.map((resource) => (
+              <Reveal key={resource.title} className="resource-card">
+                <span className="resource-label">PDF GUIDE</span>
+                <h3>{resource.title}</h3>
+                <p>{resource.description}</p>
+                <span className="resource-coming-soon">
+                  Coming soon
+                </span>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--tight">
         <div className="container">
           <Reveal className="cta-band">
             <div className="cta-band__copy">
-              <h2>Didn’t see your feeling here?</h2>
-              <p>Tell us what you’re going through. Many of our articles start with a question from you.</p>
+              <h2>Have a question?</h2>
+              <p>
+                We would love to hear what information would help you.
+              </p>
             </div>
             <div className="cta-band__actions">
-              <a href={site.social.instagram} target="_blank" rel="noreferrer" className="btn btn--light btn--lg">
-                <Instagram /> Ask on Instagram
+              <a
+                href={site.social.instagram}
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn--light btn--lg"
+              >
+                Ask on Instagram
               </a>
-              <Link to="/contact" className="btn btn--outline-light btn--lg">
-                Write to us <ArrowRight />
+              <Link
+                to="/contact"
+                className="btn btn--outline-light btn--lg"
+              >
+                Contact us
               </Link>
             </div>
           </Reveal>
+
           <Disclaimer className="disclaimer--boxed" />
         </div>
       </section>

@@ -1,7 +1,7 @@
 // Everything the client is likely to change lives here.
 export const site = {
   name: 'Menopause India',
-  tagline: 'Unpause India',
+  
   description:
     'Honest conversations, a podcast and easy-to-read articles about perimenopause and menopause for Indian women 35+.',
   url: (import.meta.env.VITE_SITE_URL || 'https://www.menopauseindia.com').replace(/\/$/, ''),
@@ -26,7 +26,7 @@ export const episodes = [
 export const nav = [
   { to: '/', label: 'Home' },
   { to: '/about', label: 'About' },
-  { to: '/learn', label: 'Learn' },
-  { to: '/podcast', label: 'Podcast' },
+  { label: 'Learn', to: '/learn' },
+  { to: '/blogs', label: 'Blogs' },
   { to: '/contact', label: 'Contact' },
 ]

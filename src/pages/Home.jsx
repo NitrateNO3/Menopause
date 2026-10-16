@@ -14,12 +14,12 @@ const thoughts = ['Hot flushes?', 'Can’t sleep?', 'Brain fog?', 'Mood swings?'
 const topics = ['Perimenopause', 'Hot flushes', 'Sleep', 'Mood', 'Strength', 'Bone health', 'Brain fog', 'Relationships', 'Doctor visits', 'Self-care']
 
 const familiar = [
-  { title: 'Periods acting differently', text: 'Closer together, further apart, heavier or lighter than before.', slug: 'perimenopause-menopause-postmenopause' },
-  { title: 'Sudden waves of heat', text: 'Hot flushes by day, night sweats that wake you up.', slug: 'hot-flushes-practical-tips' },
-  { title: 'Lying awake at 3 a.m.', text: 'Falling asleep is fine. Staying asleep is another story.', slug: 'sleep-mood-and-menopause' },
-  { title: 'Feeling not like yourself', text: 'Irritable, anxious or teary, without a clear reason.', slug: 'sleep-mood-and-menopause' },
-  { title: 'Words on the tip of your tongue', text: 'Losing your train of thought more often than you used to.', slug: 'signs-of-perimenopause' },
-  { title: 'Aches and less strength', text: 'Stiff joints, and lifting things feels harder than it should.', slug: 'strength-training-after-40' },
+  { title: 'Periods acting differently', text: 'Closer together, further apart, heavier or lighter than before.'},
+  { title: 'Sudden waves of heat', text: 'Hot flushes by day, night sweats that wake you up.' },
+  { title: 'Lying awake at 3 a.m.', text: 'Falling asleep is fine. Staying asleep is another story.'},
+  { title: 'Feeling not like yourself', text: 'Irritable, anxious or teary, without a clear reason.' },
+  { title: 'Words on the tip of your tongue', text: 'Losing your train of thought more often than you used to.' },
+  { title: 'Aches and less strength', text: 'Stiff joints, and lifting things feels harder than it should.' },
 ]
 
 export default function Home() {
@@ -53,12 +53,21 @@ export default function Home() {
               menopause, and feel a lot less alone in it.
             </p>
             <div className="hero__actions">
-              <Link to="/learn" className="btn btn--primary btn--lg">
+              <Link to="/blogs" className="btn btn--primary btn--lg">
                 Start learning <ArrowRight />
               </Link>
-              <Link to="/podcast" className="btn btn--ghost btn--lg">
-                <Play width={16} height={16} /> Watch the podcast
-              </Link>
+              
+
+<a
+  className="btn btn--ghost btn--lg"
+  href={`https://www.youtube.com/watch?v=${latest.youtubeId}`}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  ▶ Watch the podcast
+</a>
+
+
             </div>
             <p className="hero__tagline">{site.tagline}</p>
           </div>
@@ -96,44 +105,59 @@ export default function Home() {
               about at home. Tap one to learn more.
             </p>
           </Reveal>
-          <div className="familiar">
-            {familiar.map((f, i) => (
-              <Reveal key={f.title} delay={i * 60}>
-                <Link to={`/learn/${f.slug}`} className="familiar__card">
-                  <span className="familiar__num">{String(i + 1).padStart(2, '0')}</span>
-                  <h3>{f.title}</h3>
-                  <p>{f.text}</p>
-                  <span className="familiar__arrow"><ArrowRight width={18} height={18} /></span>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+          
+<div className="familiar">
+  {familiar.map((f, i) => (
+    <Reveal key={f.title} delay={i * 60}>
+      <div className="familiar__card">
+        <span className="familiar__num">
+          {String(i + 1).padStart(2, '0')}
+        </span>
+        <h3>{f.title}</h3>
+        <p>{f.text}</p>
+      </div>
+    </Reveal>
+  ))}
+</div>
+</div>
+</section>
 
-      {/* Podcast */}
-      <section className="section section--ink">
-        <div className="container podcast-feature">
-          <Reveal className="podcast-feature__copy">
-            <p className="eyebrow eyebrow--light">The podcast</p>
-            <h2 className="section__title">Real conversations, minus the awkwardness.</h2>
-            <p className="section__lead">
-              Menopause, explained in everyday language. Practical talks on fitness, health, emotions and
-              everything in between.
-            </p>
-            <div className="podcast-feature__latest">
-              <span className="label">Latest episode</span>
-              <strong>{latest.title}</strong>
-            </div>
-            <Link to="/podcast" className="btn btn--light">
-              All episodes <ArrowRight />
-            </Link>
-          </Reveal>
-          <Reveal delay={120} className="podcast-feature__video">
-            <YouTubeEmbed id={latest.youtubeId} title={latest.title} />
-          </Reveal>
-        </div>
-      </section>
+
+
+{/* Podcast */}
+<section className="section section--ink">
+  <div className="container podcast-feature">
+    <Reveal className="podcast-feature__copy">
+      <p className="eyebrow eyebrow--light">The podcast</p>
+
+      <h2 className="section__title">
+        Real conversations, minus the awkwardness.
+      </h2>
+
+      <p className="section__lead">
+        Menopause, explained in everyday language. Practical talks on
+        fitness, health, emotions and everything in between.
+      </p>
+
+      <a
+        href={`https://www.youtube.com/watch?v=${latest.youtubeId}`}
+        className="btn btn--primary"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Watch on YouTube <ArrowRight width={18} height={18} />
+      </a>
+    </Reveal>
+
+    <Reveal delay={120} className="podcast-feature__video">
+      <YouTubeEmbed
+        id={latest.youtubeId}
+        title={latest.title}
+      />
+    </Reveal>
+  </div>
+</section>
+
 
       {/* Articles */}
       <section className="section section--petal">

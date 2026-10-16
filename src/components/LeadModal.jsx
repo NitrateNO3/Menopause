@@ -93,7 +93,7 @@ function Modal({ onClose, source }) {
         </button>
         <div className="modal__art" aria-hidden="true">
           <Brandmark animated />
-          <p className="modal__tagline">Unpause India</p>
+          
         </div>
         <div className="modal__body">
           <p className="eyebrow">Join the circle</p>
