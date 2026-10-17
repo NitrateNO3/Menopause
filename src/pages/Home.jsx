@@ -1,42 +1,63 @@
+import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import { episodes, site } from '../site.config'
+import { site } from '../site.config'
 import Seo from '../components/Seo'
 import Brandmark from '../components/Brandmark'
 import Reveal from '../components/Reveal'
 import YouTubeEmbed from '../components/YouTubeEmbed'
 import { useLead } from '../components/LeadModal'
-import { ArrowRight, Instagram, Phone, Play } from '../components/Icons'
+import useEpisodes from '../lib/useEpisodes'
+import { ArrowRight, Instagram, Mail, Phone, Play } from '../components/Icons'
 
-const thoughts = ['Hot flushes?', 'Can’t sleep?', 'Brain fog?', 'Mood swings?', 'Is this normal?']
+const thoughts = ['Always tired?', 'Can’t sleep?', 'Brain fog?', 'Mood swings?', 'Is it just me?', 'Is this normal?']
 
-const topics = ['Perimenopause', 'Hot flushes', 'Sleep', 'Mood', 'Strength', 'Bone health', 'Brain fog', 'Relationships', 'Doctor visits', 'Self-care']
+const topics = [
+  'Perimenopause', 'Fatigue', 'Hot flushes', 'Sleep', 'Mood', 'Brain fog', 'Weight', 'Skin and hair',
+  'Bone health', 'Heart health', 'Intimate health', 'Family support', 'Doctor visits', 'Myths',
+]
+
+// Simple line icons for the "Sound familiar" cards (24×24, drawn with currentColor).
+const familiarIcons = {
+  tired: <><rect x="2" y="7" width="17" height="10" rx="2.5" /><path d="M22 11v2" /><path d="M5.5 10.5v3" /></>,
+  night: <><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" /><path d="M17 3v3M15.5 4.5h3" /></>,
+  self: <><circle cx="12" cy="12" r="9" /><path d="M8.5 15.5c1.8-1.3 5.2-1.3 7 0" /><path d="M9 9.5h.01M15 9.5h.01" /></>,
+  heat: <path d="M12 3c.6 3 3.2 4.6 4.6 6.8A6 6 0 1 1 6.5 13c0-1.6.7-2.9 1.6-3.8.2 1.6 1.1 2.6 2.4 2.8C10 9 10.5 5.5 12 3Z" />,
+  weight: <><rect x="3.5" y="3.5" width="17" height="17" rx="4" /><path d="M8.5 10a5 5 0 0 1 7 0" /><path d="M12 12.5l1.3-2.2" /></>,
+  dismissed: <><path d="M20 15a2 2 0 0 1-2 2H8l-4 3.5V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2Z" /><path d="M9 10.5h.01M12 10.5h.01M15 10.5h.01" /></>,
+}
 
 const familiar = [
-  { title: 'Periods acting differently', text: 'Closer together, further apart, heavier or lighter than before.'},
-  { title: 'Sudden waves of heat', text: 'Hot flushes by day, night sweats that wake you up.' },
-  { title: 'Lying awake at 3 a.m.', text: 'Falling asleep is fine. Staying asleep is another story.'},
-  { title: 'Feeling not like yourself', text: 'Irritable, anxious or teary, without a clear reason.' },
-  { title: 'Words on the tip of your tongue', text: 'Losing your train of thought more often than you used to.' },
-  { title: 'Aches and less strength', text: 'Stiff joints, and lifting things feels harder than it should.' },
+  { icon: 'tired', title: 'Tired all the time', text: 'Worn out even after a full night’s sleep, and too drained to do what you used to.' },
+  { icon: 'night', title: 'Lying awake at 3 a.m.', text: 'Falling asleep is fine. Staying asleep is another story.' },
+  { icon: 'self', title: 'Not feeling like yourself', text: 'Irritable, anxious or teary, losing words and your train of thought. Like you don’t recognise yourself anymore.' },
+  { icon: 'heat', title: 'Periods and heat acting up', text: 'Periods that change, hot flushes by day, night sweats that wake you up.' },
+  { icon: 'weight', title: 'Weight that won’t budge', text: 'Eating well, moving the same, and still gaining. It isn’t your fault.' },
+  { icon: 'dismissed', title: 'Told it’s “just your age”', text: 'Hearing “it’s stress” or “it’s all in your head” when you know something has changed.' },
+]
+
+const stages = [
+  { name: 'Perimenopause', text: 'The years before your periods stop, when symptoms often begin.' },
+  { name: 'Menopause', text: 'When you’ve gone 12 months without a period.', milestone: true },
+  { name: 'Postmenopause', text: 'Life after, when bone and heart health matter more.' },
 ]
 
 const featuredGuides = [
   {
-    title: 'Understanding Menopause',
-    category: 'STAGES & CHANGES',
-    description: 'A simple guide to the stages, fluctuating hormones, and what to expect throughout midlife.',
+    title: 'Which stage are you in?',
+    category: 'START HERE',
+    description: 'A simple guide to work out whether it’s perimenopause, menopause or after.',
     type: 0,
   },
   {
-    title: 'Managing Symptoms',
-    category: 'COMFORT & CARE',
-    description: 'Helpful information about hot flushes, mood changes, joint stiffness, and daily comfort.',
+    title: 'Questions to ask your doctor',
+    category: 'BEFORE YOUR VISIT',
+    description: 'A short list to take to your appointment, so you leave with answers.',
     type: 1,
   },
   {
-    title: 'Sleep & Wellbeing',
-    category: 'REST & ENERGY',
-    description: 'Approachable habits and insights to support deeper sleep, ease anxiety, and restore vitality.',
+    title: 'Talking to your family about menopause',
+    category: 'AT HOME',
+    description: 'What to say, and what helps, for you and the people at home.',
     type: 2,
   },
 ]
@@ -95,7 +116,7 @@ function ResourceCover({ type }) {
 
 export default function Home() {
   const { openLead } = useLead()
-  const latest = episodes[0]
+  const [latest, ...more] = useEpisodes()
 
   return (
     <>
@@ -119,8 +140,8 @@ export default function Home() {
               Let’s talk about menopause. <em>Openly.</em>
             </h1>
             <p className="hero__lead">
-              Honest conversations, a podcast and easy-to-read articles to help you understand perimenopause and
-              menopause, and feel a lot less alone in it.
+              Menopause explained in simple words, for Indian women. What’s happening, why, and what you can do about
+              it. You’re not imagining it, and you’re not alone.
             </p>
             <div className="hero__actions">
               <Link to="/blogs" className="btn btn--primary btn--lg">
@@ -167,22 +188,33 @@ export default function Home() {
           <Reveal className="section__head">
             <p className="eyebrow">Sound familiar?</p>
             <h2 className="section__title">
-              It doesn’t all happen at once.
+              It’s not in your head.
               <br />
-              And it doesn’t look the same for everyone.
+              And it’s not just you.
             </h2>
+            <p className="section__lead">
+              Menopause doesn’t arrive all at once, and it looks different for every woman.
+            </p>
           </Reveal>
           <div className="grid-3">
             {familiar.map((item, i) => (
               <Reveal key={item.title} delay={i * 60}>
                 <div className="card-familiar">
-                  <span className="card-familiar__index">0{i + 1}</span>
+                  <span className="card-familiar__index" aria-hidden="true">0{i + 1}</span>
+                  <span className="card-familiar__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      {familiarIcons[item.icon]}
+                    </svg>
+                  </span>
                   <h3>{item.title}</h3>
                   <p>{item.text}</p>
                 </div>
               </Reveal>
             ))}
           </div>
+          <Reveal>
+            <p className="familiar-close">If you nodded at even one of these, you’re in the right place.</p>
+          </Reveal>
         </div>
       </section>
 
@@ -195,24 +227,56 @@ export default function Home() {
               Real conversations, minus the awkwardness.
             </h2>
             <p className="section__lead">
-              Menopause, explained in everyday language. Practical talks on
-              fitness, health, emotions and everything in between.
+              Doctors, experts and real women, talking about menopause the way Indian women actually live it. We ask
+              the questions you’re shy to ask, in simple words.
             </p>
-            <a
-              href={`https://www.youtube.com/watch?v=${latest.youtubeId}`}
-              className="btn btn--primary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Watch on YouTube <ArrowRight width={18} height={18} />
-            </a>
+            <p className="podcast-feature__note">Every episode adds a page to our menopause dictionary for Indian women.</p>
+            <div className="podcast-feature__actions">
+              <a href={site.social.youtube} className="btn btn--primary" target="_blank" rel="noopener noreferrer">
+                Watch on YouTube <ArrowRight width={18} height={18} />
+              </a>
+              <Link to="/contact#message" className="podcast-feature__ask">
+                Send your question for the next episode
+              </Link>
+            </div>
           </Reveal>
 
           <Reveal delay={120} className="podcast-feature__video">
-            <YouTubeEmbed
-              id={latest.youtubeId}
-              title={latest.title}
-            />
+            {latest ? (
+              <>
+                <p className="podcast-feature__label">Latest episode</p>
+                <YouTubeEmbed id={latest.youtubeId} title={latest.title} />
+                {more.length > 0 && (
+                  <div className="episode-strip">
+                    {more.slice(0, 3).map((ep) => (
+                      <a
+                        key={ep.youtubeId}
+                        className="episode-mini"
+                        href={`https://www.youtube.com/watch?v=${ep.youtubeId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span className="episode-mini__thumb">
+                          <img src={`https://i.ytimg.com/vi/${ep.youtubeId}/mqdefault.jpg`} alt="" loading="lazy" />
+                          <Play width={18} height={18} />
+                        </span>
+                        <span className="episode-mini__title">{ep.title}</span>
+                        {ep.published && (
+                          <time className="episode-mini__date" dateTime={ep.published}>
+                            {new Date(ep.published).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </time>
+                        )}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <a href={site.social.youtube} className="episode-empty" target="_blank" rel="noopener noreferrer">
+                <Play width={28} height={28} />
+                <span>Watch the Menopause India podcast on YouTube</span>
+              </a>
+            )}
           </Reveal>
         </div>
       </section>
@@ -278,20 +342,18 @@ export default function Home() {
                   <p>From perimenopause to postmenopause, understand your journey at your pace.</p>
                 </div>
                 <div className="home-journey-companion__steps">
-                  <Link to="/learn" className="home-journey-step">
-                    <span className="home-journey-step__num">01</span>
-                    <span>Perimenopause</span>
-                  </Link>
-                  <span className="home-journey-step__arrow" aria-hidden="true">→</span>
-                  <Link to="/learn" className="home-journey-step home-journey-step--milestone">
-                    <span className="home-journey-step__num">02</span>
-                    <span>Menopause</span>
-                  </Link>
-                  <span className="home-journey-step__arrow" aria-hidden="true">→</span>
-                  <Link to="/learn" className="home-journey-step">
-                    <span className="home-journey-step__num">03</span>
-                    <span>Postmenopause</span>
-                  </Link>
+                  {stages.map((st, i) => (
+                    <Fragment key={st.name}>
+                      {i > 0 && <span className="home-journey-step__arrow" aria-hidden="true">→</span>}
+                      <Link to="/learn" className={`home-journey-step${st.milestone ? ' home-journey-step--milestone' : ''}`}>
+                        <span className="home-journey-step__head">
+                          <span className="home-journey-step__num">0{i + 1}</span>
+                          <span>{st.name}</span>
+                        </span>
+                        <span className="home-journey-step__text">{st.text}</span>
+                      </Link>
+                    </Fragment>
+                  ))}
                 </div>
               </div>
             </div>
@@ -307,14 +369,17 @@ export default function Home() {
           </Reveal>
           <Reveal delay={100} className="mark-story__copy">
             <p className="eyebrow">Why we’re here</p>
+            <h2 className="section__title">Built with Indian women, not just for them.</h2>
             <blockquote className="quote">
-              Two people reaching for each other, together forming an <em>M</em>. Because nobody should go through
-              menopause alone.
+              Two people reaching for each other, forming an <em>M</em>. One is you. The other is whoever you need that
+              day.
             </blockquote>
             <p>
-              For too long, menopause in India has been something women deal with quietly. Menopause India is here to
-              change that, one honest conversation at a time.
+              It started with a conversation with my mother. She didn’t know what was happening to her body, and neither
+              did the women around her. So I started asking questions, of doctors, experts and women like her.
+              Menopause India is what came out of it, one honest conversation at a time.
             </p>
+            <p className="mark-story__signature">Inakshi, founder</p>
             <Link to="/about" className="link-arrow">
               Our story <ArrowRight width={18} height={18} />
             </Link>
@@ -328,7 +393,10 @@ export default function Home() {
           <Reveal className="cta-band">
             <div className="cta-band__copy">
               <h2>Join the conversation.</h2>
-              <p>Follow along on Instagram for reels, memes and real talk, or get updates straight to your phone.</p>
+              <p>
+                Follow us on Instagram for reels and real talk, or get updates straight to your phone. Got a question
+                you’re shy to ask? Send it to us, and it could be in our next episode.
+              </p>
             </div>
             <div className="cta-band__actions">
               <a href={site.social.instagram} target="_blank" rel="noreferrer" className="btn btn--light btn--lg">
@@ -337,6 +405,9 @@ export default function Home() {
               <button className="btn btn--outline-light btn--lg" onClick={() => openLead('home-cta')}>
                 <Phone /> Get updates
               </button>
+              <Link to="/contact#message" className="cta-band__ask">
+                <Mail width={18} height={18} /> Send your question
+              </Link>
             </div>
           </Reveal>
         </div>

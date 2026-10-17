@@ -8,9 +8,12 @@ export const site = {
   social: {
     instagram: 'https://www.instagram.com/menopauseindia',
     instagramHandle: '@menopauseindia',
+    youtube: 'https://www.youtube.com/channel/UCsf60WSQKe0i2wmo5MxC4Lg',
   },
 }
 
+// The home page pulls new episodes from YouTube automatically (see api/episodes.js).
+// This list is the fallback shown if that feed can't be reached.
 // Podcast episodes, newest first. To add one, paste the YouTube video ID
 // (the part after "watch?v=" or "youtu.be/") and a title.
 export const episodes = [

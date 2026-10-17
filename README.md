@@ -26,7 +26,7 @@ Rebuild after changing `.env`.
 
 ## Editing content
 
-- **Podcast episodes:** `src/site.config.js` → `episodes`. Add the YouTube video ID and a title.
+- **Podcast episodes:** the home page pulls the newest episodes from YouTube automatically (`api/episodes.js`, refreshed about once an hour on Vercel). Set `YOUTUBE_PLAYLIST_ID` in the Vercel project settings to show only the "Menopause India Podcast" playlist instead of the whole channel. `src/site.config.js` → `episodes` is the fallback if the feed can't be reached.
 - **Articles:** `src/content/articles.js`. Copy an existing article object and edit it. The sitemap updates on the next build.
 - **Social links, tagline:** `src/site.config.js`.
 - **Colours and fonts:** `src/styles/global.css`, top of the file.

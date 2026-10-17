@@ -97,7 +97,7 @@ export default function Contact() {
           </a>
         </div>
 
-        <div className="panel contact-page__form">
+        <div className="panel contact-page__form" id="message">
           <div className="contact-page__form-head">
             <span className="panel__icon"><Mail /></span>
             <h2>Send us a message</h2>
