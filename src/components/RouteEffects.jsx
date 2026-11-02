@@ -6,7 +6,7 @@ import { trackPageView } from '../lib/analytics'
 export default function RouteEffects() {
   const { pathname, hash } = useLocation()
   useEffect(() => {
-    // Links like /learn#library land on that section; everything else starts at the top.
+    // Links like /learn#resources land on that section; everything else starts at the top.
     const target = hash && document.getElementById(hash.slice(1))
     if (target) setTimeout(() => target.scrollIntoView({ block: 'start' }), 60)
     else window.scrollTo(0, 0)

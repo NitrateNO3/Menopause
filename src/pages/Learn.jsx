@@ -10,9 +10,9 @@ const stages = [
     phase: 'The Transition',
     title: 'Perimenopause',
     description:
-      'Understand the changes that may begin before your periods stop.',
+      'Your periods may become irregular, even years before they stop completely.',
     details:
-      'Hormone levels fluctuate unevenly, bringing changes in sleep, mood, and period patterns.',
+      'Sleep problems, hot flashes and mood changes can begin during this stage, sometimes as early as your late 30s.',
   },
   {
     number: '02',
@@ -20,18 +20,18 @@ const stages = [
     title: 'Menopause',
     isMilestone: true,
     description:
-      'Learn about this transition and find practical information for everyday wellbeing.',
+      'Menopause is confirmed after 12 consecutive months without a period, when there’s no other medical cause.',
     details:
-      'Reached when you have gone 12 months in a row without a period. A single moment looking back.',
+      'Your periods have ended, but symptoms like hot flashes and sleep problems may continue.',
   },
   {
     number: '03',
     phase: 'The Years After',
     title: 'Postmenopause',
     description:
-      'Explore health and wellbeing in the years after menopause.',
+      'This is the stage of life after menopause, when your periods have permanently stopped.',
     details:
-      'Focusing on long-term strength, bone density, heart health, and vibrant everyday comfort.',
+      'Bone strength, heart health and regular health check-ups become especially important. Ongoing symptoms can still be treated.',
   },
 ]
 

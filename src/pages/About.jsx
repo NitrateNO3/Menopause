@@ -35,22 +35,22 @@ function MarkAnatomy() {
         <li>
           <span className="anatomy__num">1</span>
           <div>
-            <strong>Her</strong>
-            <p>Every woman finding her way through midlife, in her own way.</p>
+            <strong>You’re Not Alone</strong>
+            <p>A companion by your side through menopause.</p>
           </div>
         </li>
         <li>
           <span className="anatomy__num">2</span>
           <div>
-            <strong>Reaching for each other</strong>
-            <p>A hand held out, and a hand taking it. Support makes the difference.</p>
+            <strong>We Meet You Where You Are</strong>
+            <p>Every woman’s journey is different. So is the support she needs.</p>
           </div>
         </li>
         <li>
           <span className="anatomy__num">3</span>
           <div>
-            <strong>The people around her</strong>
-            <p>A friend, a partner, a daughter, a doctor. Together they form the M.</p>
+            <strong>Beyond Just You</strong>
+            <p>Bringing women, families and experts together to build understanding and support.</p>
           </div>
         </li>
       </ol>
@@ -112,7 +112,7 @@ export default function About() {
         <div className="container">
           <Reveal className="section__head section__head--center">
             <p className="eyebrow">Our mark</p>
-            <h2 className="section__title">Nobody should go through it alone.</h2>
+            <h2 className="section__title">The Story Behind Our Logo</h2>
           </Reveal>
           <Reveal>
             <MarkAnatomy />
@@ -120,7 +120,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* 4. Unpause */}
+      {/* 4. Menopause */}
       <section className="section unpause">
         <div className="container unpause__grid">
           <Reveal className="unpause__word">
@@ -134,20 +134,23 @@ export default function About() {
               </span>
             </p>
             <p className="unpause__motto">
-              <span className="unpause__un">Un</span>pause.
+              <span className="unpause__un">Meno</span>pause.
             </p>
           </Reveal>
           <Reveal delay={120} className="unpause__copy">
-            <p className="eyebrow">Unpause India</p>
-            <h2 className="section__title section__title--sm">A pause in periods. Not a pause on you.</h2>
+            <p className="eyebrow">Menopause India</p>
+            <h2 className="section__title section__title--sm">
+              A pause in periods.
+              <br />
+              Not a pause on life.
+            </h2>
             <p>
-              The word menopause comes from the Greek for <em>month</em> and <em>pause</em>: a pause in monthly periods.
-              That’s all it means.
+              The word <em>menopause</em> comes from the Greek words for <em>month</em> and <em>pause</em>, referring to
+              the end of monthly periods.
             </p>
-            <p>
-              It isn’t a pause on your work, your relationships, your joy or your plans. That’s why our motto is{' '}
-              <strong>Unpause India.</strong>
-            </p>
+            <p>But it doesn’t mean putting your health, happiness, relationships or dreams on hold.</p>
+            <p>Menopause is a natural part of life. Suffering through it doesn’t have to be.</p>
+            <p>With the right knowledge, guidance and support, you can continue living life on your terms.</p>
           </Reveal>
         </div>
       </section>
@@ -181,7 +184,7 @@ export default function About() {
           </div>
           <h3>Learn</h3>
           <p>
-            {articles.length} short, jargon-free reads on what’s happening in your body.
+            Short, jargon-free reads on what’s happening in your body.
           </p>
           <span className="link-arrow">
             Open the library <ArrowRight width={16} height={16} />
@@ -285,12 +288,12 @@ export default function About() {
         <div className="container">
           <Reveal className="cta-band">
             <div className="cta-band__copy">
-              <h2>Not sure where to begin?</h2>
-              <p>Tell us how you’ve been feeling, and we’ll point you to the right read.</p>
+              <h2>Not sure which stage you’re in?</h2>
+              <p>Understand the difference between perimenopause, menopause and postmenopause.</p>
             </div>
             <div className="cta-band__actions">
-              <Link to="/learn" className="btn btn--light btn--lg">
-                Start here <ArrowRight />
+              <Link to="/blogs#articles" className="btn btn--light btn--lg">
+                Read our guide <ArrowRight />
               </Link>
               <a href={site.social.instagram} target="_blank" rel="noreferrer" className="btn btn--outline-light btn--lg">
                 <Instagram /> Say hello

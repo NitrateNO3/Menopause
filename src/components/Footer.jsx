@@ -19,7 +19,7 @@ export default function Footer() {
 
         <div className="footer__grid">
           <div className="footer__brand">
-            <img src="/brand/logo-primary-tagline.png" alt="Menopause India: Unpause India" width="320" height="80" loading="lazy" />
+            <img src="/brand/logo-primary.png" alt="Menopause India" width="320" height="59" loading="lazy" />
             <p>Menopause support for Indian women 35+.</p>
           </div>
           <div>

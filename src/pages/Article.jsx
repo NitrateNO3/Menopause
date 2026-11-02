@@ -199,7 +199,7 @@ export default function Article() {
         <header className="read__hero">
           <div className="container read__hero-grid">
             <div className="read__hero-copy">
-              <Link to="/learn#library" className="read__back">
+              <Link to="/learn#resources" className="read__back">
                 <ArrowRight width={16} height={16} /> Back to the library
               </Link>
               <p className="read__kicker">
@@ -278,7 +278,7 @@ export default function Article() {
           <div className="mini-shelf">
             <div className="mini-shelf__head">
               <h2>Or pick another</h2>
-              <Link to="/learn#library" className="link-arrow">
+              <Link to="/learn#resources" className="link-arrow">
                 Whole library <ArrowRight width={18} height={18} />
               </Link>
             </div>

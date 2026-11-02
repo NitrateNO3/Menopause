@@ -6,13 +6,12 @@ import Brandmark from './Brandmark'
 import PhoneForm, { LEAD_KEY } from './PhoneForm'
 import { Close } from './Icons'
 
-// The popup opens automatically only on the home page, once per visit, after about 30 seconds
-// or once the visitor has scrolled halfway down, whichever comes first. Dismissing it ("Maybe later",
+// The popup opens automatically only on the home page, once per visit, when the visitor has
+// scrolled halfway down the page. Dismissing it ("Maybe later",
 // the close button or Escape) keeps it from opening by itself again for 7 days.
 // Other pages never pop it up, but the "Get updates" buttons still open it anywhere.
 // Set SKIP_IF_ALREADY_JOINED to false to also show it to people who have already shared their number.
 const SKIP_IF_ALREADY_JOINED = true
-const DELAY_MS = 30000
 const SCROLL_TRIGGER = 0.5
 const SNOOZE_DAYS = 7
 const SNOOZE_KEY = 'mi_lead_snoozed_until'
@@ -26,39 +25,35 @@ export function LeadProvider({ children }) {
   const [open, setOpen] = useState(false)
   const [source, setSource] = useState('auto')
   const { pathname } = useLocation()
-  const autoTimer = useRef(null)
   const shownThisVisit = useRef(false)
 
   useEffect(() => {
     if (pathname !== '/' || shownThisVisit.current || isSnoozed()) return
     if (SKIP_IF_ALREADY_JOINED && getItem(LEAD_KEY) === 'submitted') return
 
-    function show(trigger) {
+    function show() {
       if (shownThisVisit.current) return
       shownThisVisit.current = true
       cleanup()
       setSource('auto')
       setOpen(true)
-      track('lead_popup_shown', { trigger })
+      track('lead_popup_shown')
     }
     function onScroll() {
       const scrollable = document.documentElement.scrollHeight - window.innerHeight
-      if (scrollable > 0 && window.scrollY / scrollable >= SCROLL_TRIGGER) show('scroll')
+      if (scrollable > 0 && window.scrollY / scrollable >= SCROLL_TRIGGER) show()
     }
     function cleanup() {
-      clearTimeout(autoTimer.current)
       window.removeEventListener('scroll', onScroll)
     }
 
-    autoTimer.current = setTimeout(() => show('time'), DELAY_MS)
     window.addEventListener('scroll', onScroll, { passive: true })
-    // Leaving the home page before either trigger cancels it.
+    // Leaving the home page before scrolling halfway cancels it.
     return cleanup
   }, [pathname])
 
   const openLead = useCallback((from = 'button') => {
-    clearTimeout(autoTimer.current) // they opened it themselves, so skip the automatic one
-    shownThisVisit.current = true
+    shownThisVisit.current = true // they opened it themselves, so skip the automatic one
     setSource(from)
     setOpen(true)
   }, [])

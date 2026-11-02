@@ -16,7 +16,7 @@ function envValue(key) {
 const siteUrl = (envValue('VITE_SITE_URL') || 'https://www.menopauseindia.com').replace(/\/$/, '')
 const today = new Date().toISOString().slice(0, 10)
 const paths = [
-  '/', '/about', '/learn', '/blogs', '/podcast', '/contact',
+  '/', '/about', '/learn', '/blogs', '/contact',
   ...articles.map((a) => `/learn/${a.slug}`),
   ...blogs.map((b) => `/blogs/${b.slug}`),
 ]

@@ -6,58 +6,7 @@ import Brandmark from '../components/Brandmark'
 import { useLead } from '../components/LeadModal'
 import { ArrowRight } from '../components/Icons'
 import { blogs, blogTopics, blogReadingTime } from '../content/blogs'
-
-function BlogArtPattern({ type }) {
-  if (type === 0) {
-    return (
-      <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" className="blog-cover-svg">
-        <defs>
-          <radialGradient id="art-glow-1" cx="70%" cy="30%" r="60%">
-            <stop offset="0%" stopColor="var(--rose)" stopOpacity="0.32" />
-            <stop offset="100%" stopColor="var(--rose)" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx="280" cy="90" r="110" fill="url(#art-glow-1)" />
-        <ellipse cx="80" cy="60" rx="60" ry="70" fill="var(--blush)" opacity="0.4" />
-        <ellipse cx="320" cy="140" rx="70" ry="80" fill="var(--rose)" opacity="0.22" />
-        <path d="M30 170 Q130 110 210 160 T380 130" fill="none" stroke="var(--rose)" strokeWidth="6" strokeLinecap="round" opacity="0.28" />
-        <circle cx="150" cy="40" r="12" fill="var(--blush)" opacity="0.6" />
-      </svg>
-    )
-  }
-  if (type === 1) {
-    return (
-      <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" className="blog-cover-svg">
-        <defs>
-          <radialGradient id="art-glow-2" cx="30%" cy="70%" r="60%">
-            <stop offset="0%" stopColor="var(--rose)" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="var(--rose)" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx="120" cy="130" r="110" fill="url(#art-glow-2)" />
-        <circle cx="310" cy="60" r="46" fill="var(--blush)" opacity="0.45" />
-        <circle cx="90" cy="80" r="68" fill="var(--rose)" opacity="0.22" />
-        <path d="M200 30 C270 70 290 150 360 180" fill="none" stroke="var(--blush)" strokeWidth="8" strokeLinecap="round" opacity="0.3" />
-        <circle cx="230" cy="160" r="16" fill="var(--rose)" opacity="0.2" />
-      </svg>
-    )
-  }
-  return (
-    <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" className="blog-cover-svg">
-      <defs>
-        <radialGradient id="art-glow-3" cx="70%" cy="70%" r="60%">
-          <stop offset="0%" stopColor="var(--rose)" stopOpacity="0.3" />
-          <stop offset="100%" stopColor="var(--rose)" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <circle cx="290" cy="130" r="100" fill="url(#art-glow-3)" />
-      <ellipse cx="100" cy="120" rx="70" ry="60" fill="var(--blush)" opacity="0.38" />
-      <path d="M20 150 Q100 70 180 110 T360 70" fill="none" stroke="var(--rose)" strokeWidth="6" strokeLinecap="round" opacity="0.28" />
-      <ellipse cx="280" cy="50" rx="40" ry="45" fill="var(--rose)" opacity="0.2" />
-      <circle cx="65" cy="50" r="14" fill="var(--blush)" opacity="0.5" />
-    </svg>
-  )
-}
+import BlogArt from '../components/BlogArt'
 
 export default function Blogs() {
   const [activeTopic, setActiveTopic] = useState(null)
@@ -161,10 +110,7 @@ export default function Blogs() {
                 <Link to={`/blogs/${article.slug}`} className="blog-card">
                   <div className={`blog-card-art blog-card-art--${(index % 3) + 1}`} aria-hidden="true">
                     <div className="blog-card-art__svg-wrap">
-                      <BlogArtPattern type={index % 3} />
-                    </div>
-                    <div className="blog-card-art__badge">
-                      <span>m.</span>
+                      <BlogArt slug={article.slug} className="blog-cover-svg" />
                     </div>
                   </div>
 
@@ -212,14 +158,14 @@ export default function Blogs() {
               </p>
             </div>
             <div className="blogs-note__action">
-              <Link
-                to="/#contact"
+              <button
+                type="button"
                 onClick={() => openLead('blogs-note')}
                 className="btn btn--primary btn--lg blogs-note__btn"
               >
                 <span>Get updates</span>
                 <ArrowRight />
-              </Link>
+              </button>
             </div>
           </div>
         </Reveal>
