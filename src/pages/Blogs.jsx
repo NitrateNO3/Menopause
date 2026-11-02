@@ -5,37 +5,7 @@ import Reveal from '../components/Reveal'
 import Brandmark from '../components/Brandmark'
 import { useLead } from '../components/LeadModal'
 import { ArrowRight } from '../components/Icons'
-
-const topics = [
-  'Perimenopause',
-  'Menopause basics',
-  'Sleep & wellbeing',
-  'Fitness & nutrition',
-]
-
-const articles = [
-  {
-    category: 'MENOPAUSE BASICS',
-    title: 'Understanding Your Menopause Journey',
-    description:
-      'A simple introduction to perimenopause, menopause and the changes you may experience.',
-    readTime: '5 min read',
-  },
-  {
-    category: 'SLEEP & WELLBEING',
-    title: 'Making Sense of Sleep Changes',
-    description:
-      'Explore common sleep challenges during midlife and practical ways to support better rest.',
-    readTime: '4 min read',
-  },
-  {
-    category: 'FITNESS & NUTRITION',
-    title: 'Small Habits for Feeling Your Best',
-    description:
-      'Discover approachable habits that can support your wellbeing through midlife.',
-    readTime: '6 min read',
-  },
-]
+import { blogs, blogTopics, blogReadingTime } from '../content/blogs'
 
 function BlogArtPattern({ type }) {
   if (type === 0) {
@@ -102,8 +72,8 @@ export default function Blogs() {
   }
 
   const filteredArticles = activeTopic
-    ? articles.filter((a) => a.category.toLowerCase() === activeTopic.toLowerCase())
-    : articles
+    ? blogs.filter((a) => a.category === activeTopic)
+    : blogs
 
   return (
     <div className="blogs-page">
@@ -149,7 +119,7 @@ export default function Blogs() {
         <div className="blog-topics-wrap">
           <p className="eyebrow">EXPLORE BY TOPIC</p>
           <div className="blog-topics" role="tablist" aria-label="Explore by topic">
-            {topics.map((topic) => {
+            {blogTopics.map((topic) => {
               const isActive = activeTopic === topic
               return (
                 <button
@@ -187,8 +157,8 @@ export default function Blogs() {
         <div className="blog-grid">
           {filteredArticles.length > 0 ? (
             filteredArticles.map((article, index) => (
-              <Reveal key={article.title} delay={index * 120} className="blog-card-wrap">
-                <article className="blog-card">
+              <Reveal key={article.slug} delay={index * 120} className="blog-card-wrap">
+                <Link to={`/blogs/${article.slug}`} className="blog-card">
                   <div className={`blog-card-art blog-card-art--${(index % 3) + 1}`} aria-hidden="true">
                     <div className="blog-card-art__svg-wrap">
                       <BlogArtPattern type={index % 3} />
@@ -201,22 +171,21 @@ export default function Blogs() {
                   <div className="blog-card-body">
                     <span className="blog-category">{article.category}</span>
                     <h3>{article.title}</h3>
-                    <p className="blog-card-desc">{article.description}</p>
+                    <p className="blog-card-desc">{article.excerpt}</p>
                     <div className="blog-card-footer">
                       <span className="blog-read-time">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                           <circle cx="12" cy="12" r="10" />
                           <polyline points="12 6 12 12 16 14" />
                         </svg>
-                        {article.readTime}
+                        {blogReadingTime(article)} min read
                       </span>
-                      <span className="blog-coming-soon">
-                        <span className="blog-coming-soon__dot" aria-hidden="true" />
-                        Article coming soon
+                      <span className="blog-card-more">
+                        Read article <ArrowRight width={16} height={16} />
                       </span>
                     </div>
                   </div>
-                </article>
+                </Link>
               </Reveal>
             ))
           ) : (
