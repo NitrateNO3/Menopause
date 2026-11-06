@@ -60,14 +60,14 @@ export default function PhoneForm({ source = 'inline', onDone, compact = false, 
   return (
     <form className={`form ${compact || inline ? 'form--compact' : ''}`} onSubmit={handleSubmit} noValidate>
       {!inline && (
-      <div className="field">
-        <label htmlFor={`${id}-name`}>Your first name </label>
-        <input id={`${id}-name`} type="text" autoComplete="given-name" value={name} onChange={(e) => setName(e.target.value)} />
-      </div>
+        <div className="field">
+          <label htmlFor={`${id}-name`}>Your first name </label>
+          <input id={`${id}-name`} type="text" autoComplete="given-name" value={name} onChange={(e) => setName(e.target.value)} />
+        </div>
       )}
-      <div className="field">
-        <label htmlFor={`${id}-phone`} className={inline ? 'sr-only' : undefined}>Mobile number</label>
-        <div className={inline ? 'phone-row' : undefined}>
+      <div className="field-row">
+        <div className="field">
+          <label htmlFor={`${id}-phone`} className={inline ? 'sr-only' : undefined}>Mobile number</label>
           <div className="phone-input">
             <span className="phone-input__prefix" aria-hidden="true">🇮🇳 +91</span>
             <input
@@ -83,40 +83,38 @@ export default function PhoneForm({ source = 'inline', onDone, compact = false, 
               required
             />
           </div>
-          {inline && <SubmitButton status={status} />}
         </div>
-      </div>
-
-      <div className="field">
-        <label htmlFor={`${id}-email`}>Email address</label>
-        <input
-          id={`${id}-email`}
-          type="email"
-          autoComplete="email"
-          placeholder="you@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </div>
-
-      <div className="field">
-        <label htmlFor={`${id}-whatsapp`}>WhatsApp number <span className="field__optional">(optional)</span></label>
-        <div className="phone-input">
-          <span className="phone-input__prefix" aria-hidden="true">🇮🇳 +91</span>
+        <div className="field">
+          <label htmlFor={`${id}-email`}>Email address</label>
           <input
-            id={`${id}-whatsapp`}
-            type="tel"
-            inputMode="numeric"
-            autoComplete="tel-national"
-            placeholder="Same as above, or leave blank"
-            maxLength={18}
-            value={whatsapp}
-            onChange={(e) => setWhatsapp(e.target.value)}
+            id={`${id}-email`}
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
       </div>
-
+      {!inline && (
+        <div className="field">
+          <label htmlFor={`${id}-whatsapp`}>WhatsApp number <span className="field__optional">(optional)</span></label>
+          <div className="phone-input">
+            <span className="phone-input__prefix" aria-hidden="true">🇮🇳 +91</span>
+            <input
+              id={`${id}-whatsapp`}
+              type="tel"
+              inputMode="numeric"
+              autoComplete="tel-national"
+              placeholder="Same as mobile, or leave blank"
+              maxLength={18}
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+            />
+          </div>
+        </div>
+      )}
       <label className="checkbox">
         <input type="checkbox" checked={contact} onChange={(e) => setContact(e.target.checked)} />
         <span>
@@ -128,6 +126,7 @@ export default function PhoneForm({ source = 'inline', onDone, compact = false, 
         <span>Send me the latest articles and podcast episodes.</span>
       </label>
       {error && <p className="form__error" role="alert">{error}</p>}
+      {inline && <SubmitButton status={status} />}
       {!inline && <SubmitButton status={status} block />}
     </form>
   )

@@ -1456,15 +1456,15 @@ input, textarea { font: inherit; color: inherit; }
 
 /* ---------- Forms ---------- */
 .form { display: grid; gap: 16px; }
-.form--compact { gap: 12px; }
-.field { display: grid; gap: 6px; }
-.field label { font-weight: 700; font-size: 0.95rem; }
+.form--compact { gap: 10px; }
+.field { display: grid; gap: 4px; }
+.field label { font-weight: 700; font-size: 0.92rem; }
 .field__optional { font-weight: 400; color: var(--text-soft); }
 .field input, .field textarea, .phone-input {
   width: 100%; border: 1.5px solid var(--line); background: var(--white); border-radius: var(--radius-sm);
-  font-size: 1.05rem; transition: border-color 0.2s, box-shadow 0.2s;
+  font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s;
 }
-.field input, .field textarea { padding: 13px 16px 11px; }
+.field input, .field textarea { padding: 11px 14px 9px; }
 .field textarea { resize: vertical; min-height: 120px; }
 .field input:focus, .field textarea:focus, .phone-input:focus-within { outline: none; border-color: var(--rose); box-shadow: 0 0 0 4px rgba(239, 93, 162, 0.16); }
 .phone-input { display: flex; align-items: stretch; overflow: hidden; }
@@ -1523,20 +1523,20 @@ input, textarea { font: inherit; color: inherit; }
   text-align: center;
 }
 .modal__art .modal__guide-badge .modal__guide-badge__star { color: var(--rose); }
-.modal__body { padding: clamp(28px, 4vw, 44px); }
-.modal__body .eyebrow { margin-bottom: 10px; }
-.modal__body h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); }
-.modal__lead { color: var(--text-soft); margin: 12px 0 22px; }
-.modal__close { position: absolute; top: 14px; right: 14px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--petal); display: grid; place-items: center; color: var(--ink); transition: background 0.2s; }
+.modal__body { padding: clamp(24px, 4vw, 36px); }
+.modal__body .eyebrow { margin-bottom: 8px; }
+.modal__body h2 { font-size: clamp(1.5rem, 3vw, 1.8rem); line-height: 1.2; }
+.modal__lead { color: var(--text-soft); margin: 8px 0 16px; font-size: 0.98rem; }
+.modal__close { position: absolute; top: 10px; right: 10px; z-index: 2; width: 36px; height: 36px; border-radius: 50%; border: 0; background: var(--petal); display: grid; place-items: center; color: var(--ink); transition: background 0.2s; }
 .modal__close:hover { background: var(--blush); }
-.modal__later { display: block; margin: 14px auto 0; background: none; border: 0; color: var(--text-soft); font-size: 0.95rem; text-decoration: underline; text-underline-offset: 3px; }
+.modal__later { display: block; margin: 12px auto 0; background: none; border: 0; color: var(--text-soft); font-size: 0.92rem; text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 680px) {
   .modal { align-items: end; padding: 0; }
   .modal__dialog { grid-template-columns: 1fr; border-radius: var(--radius-lg) var(--radius-lg) 0 0; max-height: 94vh; overflow-y: auto; animation-name: slide-up; }
-  .modal__art { flex-direction: row; padding: 22px 24px; justify-content: flex-start; gap: 16px; }
-  .modal__art .brandmark { width: 52px; }
-  .modal__tagline { font-size: 1.15rem; }
-  .modal__body { padding: 24px 20px 28px; }
+  .modal__art { flex-direction: row; padding: 18px 20px; justify-content: flex-start; gap: 14px; }
+  .modal__art .brandmark { width: 44px; }
+  .modal__tagline { font-size: 1.05rem; }
+  .modal__body { padding: 20px 18px 24px; }
 }
 @keyframes fade { from { opacity: 0; } }
 @keyframes pop { from { opacity: 0; transform: translateY(20px) scale(0.97); } }
