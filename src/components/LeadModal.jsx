@@ -113,15 +113,17 @@ function Modal({ onClose, source }) {
         </button>
         <div className="modal__art" aria-hidden="true">
           <Brandmark animated />
-          
+          <span className="modal__guide-badge">
+            <span className="modal__guide-badge__star">✦</span> Free Starter Guide
+          </span>
         </div>
         <div className="modal__body">
-          <p className="eyebrow">Join the circle</p>
-          <h2 id="lead-title">You don’t have to figure this out alone.</h2>
+          <p className="eyebrow">Start Here</p>
+          <h2 id="lead-title">New to Menopause? Start Here.</h2>
           <p className="modal__lead">
-            Leave your number and we’ll share new podcast episodes, articles and community updates with you.
+            Get our FREE Menopause Starter Guide to understand what may be happening in your body, what to look out for and what you can do next. Plus, discover our latest expert podcast episode.
           </p>
-          <PhoneForm source={source} compact onDone={() => { doneRef.current = true; setDone(true) }} />
+          <PhoneForm source={source} compact guide onDone={() => { doneRef.current = true; setDone(true) }} />
           <button className="modal__later" onClick={dismiss}>{done ? 'Close' : 'Maybe later'}</button>
         </div>
       </div>

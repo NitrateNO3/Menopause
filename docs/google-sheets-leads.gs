@@ -12,7 +12,7 @@ function doPost(e) {
   var data = JSON.parse(e.postData.contents);
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(data.type) || ss.insertSheet(data.type);
-  var columns = ['submittedAt', 'name', 'phone', 'email', 'message', 'consent', 'page'];
+  var columns = ['submittedAt', 'name', 'phone', 'email', 'whatsapp', 'consent', 'updates', 'guide', 'message', 'page'];
   if (sheet.getLastRow() === 0) sheet.appendRow(columns);
   sheet.appendRow(columns.map(function (c) { return data[c] === undefined ? '' : String(data[c]); }));
   return ContentService.createTextOutput('ok');
